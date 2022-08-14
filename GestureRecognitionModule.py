@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import mediapipe as mp
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.layers import LSTM, Dense
 
 
 
@@ -33,19 +33,20 @@ def extract_keypoints(results):
             hand = np.zeros(21*3)
     return hand
 
-actions = np.array(['write','idle','eraseall','erase'])
+actions = np.array(['write','erase','eraseall','idle'])
 
 model = Sequential()
-model.add(Dense(63, activation = 'relu', input_shape=(63,)))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dropout(0.5))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(4, activation = 'softmax'))
+model.add(LSTM(64, return_sequences=True, activation = 'relu', input_shape=(10,63)))
+model.add(LSTM(128, return_sequences=True, activation = 'relu'))
+model.add(LSTM(64, return_sequences=False, activation = 'relu'))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(4, activation='softmax'))
 
-model.load_weights(r"D:\AiVirtualPainter\yomari-codecamp\classifier.h5")
+model.load_weights("AI-Virtual-Paint\\final_classifier.h5")
 res = np.zeros(10)
 
+sequence = []
 threshold = 0.7
 
 
@@ -96,6 +97,7 @@ threshold = 0.7
 
 
 def class_return(image,handNo=0):
+    global sequence
     global res
     global coordinate
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -110,9 +112,13 @@ def class_return(image,handNo=0):
         mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
         
     keypoints = extract_keypoints(results)
-    res = model.predict(np.expand_dims(keypoints, axis=0))[0]
-    print(actions[np.argmax(res)])
+    sequence.insert(0,keypoints)
+    sequence = sequence[:10]   
     coordinate = keypoints[23:25]
+
+    if len(sequence) == 10:
+        res = model.predict(np.expand_dims(sequence, axis=0))[0]
+
 
     ##########################For coordinate#####################
 

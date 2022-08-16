@@ -36,9 +36,16 @@ To stay idle/move without writing: make a fist and point index and middle finger
 To erase all: make a fist and point index, middle and ring finger upwards.
 To erase: make a fist and an eraser is activated at the position of your index finger. Move your fist accordingly to erase previously drawn strokes.
 
+### Working Image
+![Screenshot (75)](https://user-images.githubusercontent.com/94151612/184805541-3399c20a-147a-4e9b-ac54-a21c3e16ebb3.png)
+![Screenshot (76)](https://user-images.githubusercontent.com/94151612/184805549-29cfa17e-538d-4bd7-b127-cd63d2ce5e3c.png)
+
 ### For using demo with webcam
 Run camera-visualdemo.py
 Doddle or scribble can be done in the output of camera.
+![image](https://user-images.githubusercontent.com/94151612/184805466-dd590146-32ab-4877-8c7e-641db5e92108.png)
+
+
 
 ## Credits
 Collaborators:
